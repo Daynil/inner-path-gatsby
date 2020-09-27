@@ -21,6 +21,18 @@ html body {
   }
 }
 
+.about-layout {
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+@media only screen and (min-width: 850px) {
+  .about-layout {
+    display: flex;
+    flex-direction: row;
+  }
+}
+
 .entry-content {
   font-weight: 300;
   line-height: 30px;

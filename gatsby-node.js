@@ -30,6 +30,7 @@ exports.sourceNodes = async ({
           featuredImage,
           linkToBlog: subLeaser.custom_fields.link_to_personal_blog[0],
           psychTodayCode: subLeaser.custom_fields.psych_today_code[0],
+          aboutPageOrder: subLeaser.custom_fields.about_page_order_number[0],
           pageTitle: subLeaser.title.rendered,
           pageContent: subLeaser.content.rendered
         };

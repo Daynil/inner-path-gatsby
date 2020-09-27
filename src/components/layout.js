@@ -11,7 +11,7 @@ import {
   Toolbar,
   withStyles
 } from '@material-ui/core';
-import { teal } from '@material-ui/core/colors';
+import { deepPurple, teal } from '@material-ui/core/colors';
 import { graphql, Link, useStaticQuery } from 'gatsby';
 import React from 'react';
 import EmailIcon from '../assets/email-icon';
@@ -56,7 +56,8 @@ const CssTextField = withStyles((theme) => ({
 
 const theme = createMuiTheme({
   palette: {
-    primary: teal
+    primary: teal,
+    secondary: deepPurple
   },
   typography: {
     fontFamily: ['Work Sans', '"sans-serif"'].join(',')
@@ -106,8 +107,6 @@ const Layout = ({ path, children }) => {
       );
       return parent;
     });
-
-  console.log(parentItems);
 
   const parentMenu = parentItems.map((item, i) => {
     let submenu = null;
