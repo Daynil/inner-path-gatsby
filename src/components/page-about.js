@@ -19,7 +19,6 @@ export default function Page({ path, data }) {
           {data.wordpressPage.subLeasers
             .sort((a, b) => a.aboutPageOrder - b.aboutPageOrder)
             .map((subLeaser, i) => {
-              console.log(subLeaser);
               return (
                 <Card key={i} style={{ width: '298px', marginTop: '20px' }}>
                   <CardHeader
@@ -27,17 +26,18 @@ export default function Page({ path, data }) {
                     subheader={subLeaser.credentials}
                   />
                   <img src={subLeaser.featuredImage}></img>
-                  <CardActions>
+                  <CardActions style={{ margin: '8px 0 10px 0' }}>
                     <Button
                       variant="outlined"
                       color="secondary"
-                      style={{ textTransform: 'none' }}
+                      style={{ textTransform: 'none', margin: 0, padding: 0 }}
                     >
                       <Link
                         to={'../' + subLeaser.slug}
                         style={{
                           width: '100%',
-                          color: `black`
+                          color: 'black',
+                          padding: '10px'
                         }}
                       >
                         More Info

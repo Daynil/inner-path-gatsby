@@ -121,13 +121,16 @@ const Layout = ({ path, children }) => {
           onClose={handleClose}
         >
           {item.children.map((child, i) => (
-            <MenuItem id={i} onClick={handleClose}>
+            <MenuItem
+              id={i}
+              onClick={handleClose}
+              style={{ margin: 0, padding: 0 }}
+            >
               <Link
                 to={'../' + child.targetSlug}
                 style={{
                   color: 'black',
-                  paddingLeft: '8px',
-                  paddingRight: '8px',
+                  padding: '10px',
                   width: '100%'
                 }}
               >
@@ -146,13 +149,16 @@ const Layout = ({ path, children }) => {
           color="inherit"
           key={i}
           style={{
-            margin: '2px',
-            textTransform: 'none'
+            textTransform: 'none',
+            margin: '0 10px 0 0',
+            padding: 0
           }}
           onClick={item.children.length ? handleClick : null}
         >
           {item.children.length ? (
-            <span style={{ fontWeight: 400, fontSize: '16px' }}>
+            <span
+              style={{ fontWeight: 400, fontSize: '16px', padding: '10px' }}
+            >
               {item.name}
             </span>
           ) : (
@@ -160,8 +166,7 @@ const Layout = ({ path, children }) => {
               to={'../' + item.targetSlug}
               style={{
                 color: linkColor,
-                paddingLeft: '8px',
-                paddingRight: '8px',
+                padding: '10px',
                 width: '100%'
               }}
             >
@@ -186,7 +191,9 @@ const Layout = ({ path, children }) => {
                 <Button
                   color="inherit"
                   style={{
-                    textTransform: 'none'
+                    textTransform: 'none',
+                    margin: 0,
+                    padding: 0
                   }}
                 >
                   <img
