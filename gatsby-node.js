@@ -33,12 +33,32 @@ exports.sourceNodes = async ({
     });
 
   pages.forEach((page) => {
+    // Parse anchor tags for internal links to Gatsby links
+    const anchorReg = /<a[^>]*>([^<]+)<\/a>/gm;
+    const targetReg = /href=\\?"(.*?)"/gm;
+
+    let rawHtmlString = page.content.rendered;
+    let anchorMatch = anchorReg.exec(rawHtmlString);
+
+    while (anchorMatch != null) {
+      const [fullMatch, innerText] = anchorMatch;
+      const [, targetUrl] = targetReg.exec(fullMatch);
+
+      if (targetUrl.substring(0, 4) !== 'http') {
+        const gatsbyLink = `<Link to=/\"${targetUrl}/\">${innerText}</Link>`;
+        rawHtmlString = rawHtmlString.replace(fullMatch, gatsbyLink);
+      }
+
+      targetReg.exec(fullMatch); // Increment to reset
+      anchorMatch = anchorReg.exec(rawHtmlString);
+    }
+
     const nodeData = {
       slug: page.title.rendered === 'Home' ? '/' : page.slug,
       status: page.status,
       title: page.title.rendered,
-      content: page.content.rendered,
-      subLeasers: page.slug === 'about-us' ? subLeasers : null
+      content: rawHtmlString,
+      subLeasers: page.slug === 'us' ? subLeasers : null
     };
 
     if (nodeData.status === 'publish') {

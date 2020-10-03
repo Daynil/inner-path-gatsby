@@ -1,10 +1,11 @@
-import { graphql } from 'gatsby';
+import { graphql, Link } from 'gatsby';
 import React from 'react';
 import Layout from './layout';
 
 export default function Page({ path, data }) {
   return (
     <Layout path={path}>
+      {1 === 1 ? null : <Link to="/"></Link>}
       <div style={{ minHeight: 'calc(100vh - 64px - 530px)' }}>
         {data.wordpressPage.title === 'Home' ? (
           <div style={{ marginBottom: '10px' }}></div>
