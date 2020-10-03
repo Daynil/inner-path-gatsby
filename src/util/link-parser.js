@@ -25,11 +25,7 @@ var processingInstructions = [
       );
     },
     processNode: function (node, children, index) {
-      return React.createElement(
-        Link,
-        { to: node.attribs['href'] },
-        node.children[0].data
-      );
+      return <Link to={node.attribs['href']}>{node.children[0].data}</Link>;
     }
   },
   {
