@@ -16,26 +16,21 @@ exports.sourceNodes = async ({
     await fetch('http://admin.innerpathllc.com/wp-json/wp/v2/subleaser')
   ).json();
 
-  const subLeasers = await Promise.all(
-    subLeasersData
-      .filter((subLeaser) => subLeaser.status === 'publish')
-      .map(async (subLeaser) => {
-        const featuredImage = await getFeaturedImageUrl(
-          subLeaser.custom_fields.featured_image[0]
-        );
-        return {
-          slug: subLeaser.slug,
-          name: subLeaser.custom_fields.name[0],
-          credentials: subLeaser.custom_fields.credentials[0],
-          featuredImage,
-          linkToBlog: subLeaser.custom_fields.link_to_personal_blog[0],
-          psychTodayCode: subLeaser.custom_fields.psych_today_code[0],
-          aboutPageOrder: subLeaser.custom_fields.about_page_order_number[0],
-          pageTitle: subLeaser.title.rendered,
-          pageContent: subLeaser.content.rendered
-        };
-      })
-  );
+  const subLeasers = subLeasersData
+    .filter((subLeaser) => subLeaser.status === 'publish')
+    .map((subLeaser) => {
+      return {
+        slug: subLeaser.slug,
+        name: subLeaser.custom_fields.name[0],
+        credentials: subLeaser.custom_fields.credentials[0],
+        featuredImage: subLeaser.custom_fields.featured_image[0],
+        linkToBlog: subLeaser.custom_fields.link_to_personal_blog[0],
+        psychTodayCode: subLeaser.custom_fields.psych_today_code[0],
+        aboutPageOrder: subLeaser.custom_fields.about_page_order_number[0],
+        pageTitle: subLeaser.title.rendered,
+        pageContent: subLeaser.content.rendered
+      };
+    });
 
   pages.forEach((page) => {
     const nodeData = {
@@ -155,12 +150,3 @@ exports.onCreateWebpackConfig = ({ actions }) => {
     });
   }
 };
-
-async function getFeaturedImageUrl(imageId) {
-  const imageData = await (
-    await fetch(
-      `http://admin.innerpathllc.com/wp-json/wp/v2/media/${parseInt(imageId)}`
-    )
-  ).json();
-  return imageData.media_details.sizes.full.source_url;
-}

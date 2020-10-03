@@ -232,9 +232,6 @@ const Layout = ({ path, children }) => {
             </Toolbar>
           </AppBar>
         </div>
-        <div
-          style={{ position: 'absolute', width: '100%', height: '100%' }}
-        ></div>
         <main>{children}</main>
         <footer>
           <h4 id="contact-text">Want to contact us?</h4>
