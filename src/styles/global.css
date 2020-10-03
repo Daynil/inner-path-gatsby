@@ -81,15 +81,18 @@ img {
 }
 
 a {
-  color: hsl(174deg 100% 29%);
+  color: hsl(174deg 100% 38%);
   text-decoration: none;
-}
-a:hover {
-  color: hsl(174deg 100% 45%);
   transition: 0.2s;
 }
+a:hover {
+  color: hsl(174deg 100% 47%);
+}
 a:visited {
-  color: hsl(174deg 100% 20%);
+  color: hsl(174deg 100% 38%);
+}
+a:visited:hover {
+  color: hsl(174deg 100% 47%);
 }
 
 img.rounded {

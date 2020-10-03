@@ -115,6 +115,7 @@ const Layout = ({ path, children }) => {
       submenu = (
         <Menu
           id={`${item.wpID}-menu`}
+          key={i}
           anchorEl={anchorEl}
           keepMounted
           open={Boolean(anchorEl)}
@@ -123,6 +124,7 @@ const Layout = ({ path, children }) => {
           {item.children.map((child, i) => (
             <MenuItem
               id={i}
+              key={i}
               onClick={handleClose}
               style={{ margin: 0, padding: 0 }}
             >
@@ -144,10 +146,9 @@ const Layout = ({ path, children }) => {
       );
     }
     return (
-      <div>
+      <div key={i}>
         <Button
           color="inherit"
-          key={i}
           style={{
             textTransform: 'none',
             margin: '0 10px 0 0',

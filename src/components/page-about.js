@@ -1,6 +1,7 @@
 import { Button, Card, CardActions, CardHeader } from '@material-ui/core';
 import { graphql, Link } from 'gatsby';
 import React from 'react';
+import { parseInternalLinks } from '../util/link-parser';
 import Layout from './layout';
 
 export default function Page({ path, data }) {
@@ -48,10 +49,13 @@ export default function Page({ path, data }) {
               );
             })}
         </div>
-        <div
+        <div className="entry-content">
+          {parseInternalLinks(data.wordpressPage.content)}
+        </div>
+        {/* <div
           className="entry-content"
           dangerouslySetInnerHTML={{ __html: data.wordpressPage.content }}
-        ></div>
+        ></div> */}
       </div>
     </Layout>
   );

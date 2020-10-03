@@ -1,11 +1,11 @@
-import { graphql, Link } from 'gatsby';
+import { graphql } from 'gatsby';
 import React from 'react';
+import { parseInternalLinks } from '../util/link-parser';
 import Layout from './layout';
 
 export default function Page({ path, data }) {
   return (
     <Layout path={path}>
-      {1 === 1 ? null : <Link to="/"></Link>}
       <div style={{ minHeight: 'calc(100vh - 64px - 530px)' }}>
         {data.wordpressPage.title === 'Home' ? (
           <div style={{ marginBottom: '10px' }}></div>
@@ -14,10 +14,13 @@ export default function Page({ path, data }) {
             {data.wordpressPage.title}
           </h1>
         )}
-        <div
+        <div className="entry-content">
+          {parseInternalLinks(data.wordpressPage.content)}
+        </div>
+        {/* <div
           className="entry-content"
           dangerouslySetInnerHTML={{ __html: data.wordpressPage.content }}
-        ></div>
+        ></div> */}
         {data.wordpressPage.psychTodayCode ? (
           <div
             className="entry-content"
