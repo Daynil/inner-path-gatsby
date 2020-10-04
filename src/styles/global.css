@@ -71,8 +71,8 @@ h2 {
 }
 
 figure.aligncenter {
-  display: flex;
-  justify-content: center;
+  display: block;
+  margin: 0 auto;
 }
 
 img {

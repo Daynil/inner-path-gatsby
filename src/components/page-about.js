@@ -2,6 +2,7 @@ import { Button, Card, CardActions, CardHeader } from '@material-ui/core';
 import { graphql, Link } from 'gatsby';
 import React from 'react';
 import { parseWPHTMLString } from '../util/wp-parser';
+import Image from './image';
 import Layout from './layout';
 
 export default function Page({ path, data }) {
@@ -26,7 +27,7 @@ export default function Page({ path, data }) {
                     title={subLeaser.name}
                     subheader={subLeaser.credentials}
                   />
-                  <img src={subLeaser.featuredImage}></img>
+                  <Image src={subLeaser.featuredImageId} />
                   <CardActions style={{ margin: '8px 0 10px 0' }}>
                     <Button
                       variant="outlined"
@@ -71,7 +72,7 @@ export const query = graphql`
         aboutPageOrder
         name
         credentials
-        featuredImage
+        featuredImageId
       }
     }
   }

@@ -28,7 +28,7 @@ exports.sourceNodes = async ({
         slug: subLeaser.slug,
         name: subLeaser.custom_fields.name[0],
         credentials: subLeaser.custom_fields.credentials[0],
-        featuredImage: subLeaser.custom_fields.featured_image[0],
+        featuredImageId: subLeaser.custom_fields.featured_image[0],
         linkToBlog: subLeaser.custom_fields.link_to_personal_blog[0],
         psychTodayCode: subLeaser.custom_fields.psych_today_code[0],
         aboutPageOrder: subLeaser.custom_fields.about_page_order_number[0],
@@ -113,16 +113,16 @@ exports.sourceNodes = async ({
   });
 
   // @ts-ignore
-  const images = (await (await fetch(`${wpAPIBasePath}/media`)).json()).map(
-    (image) => {
+  const images = (await (await fetch(`${wpAPIBasePath}/media`)).json())
+    .filter((media) => media.media_type === 'image')
+    .map((image) => {
       return {
         wpID: image.id,
         name: image.slug,
         uploaded: image.date,
         url: image.media_details.sizes.full.source_url
       };
-    }
-  );
+    });
 
   // @ts-ignore
   const imageCache = JSON.parse(

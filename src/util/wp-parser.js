@@ -29,16 +29,41 @@ var processingInstructions = [
       return <Link to={node.attribs['href']}>{node.children[0].data}</Link>;
     }
   },
+  // Adjust resized Wordpress image wrappers to suite Gatsby Image Fluid
+  {
+    replaceChildren: false,
+    shouldProcessNode: function (node) {
+      return (
+        node.name === 'figure' &&
+        node.attribs['class'] &&
+        node.attribs['class'].includes('is-resized')
+      );
+    },
+    processNode: function (node, children, index) {
+      const nodeWidth =
+        node.children[0] && node.children[0].attribs['width']
+          ? node.children[0].attribs['width']
+          : null;
+      const nodeHeight =
+        node.children[0] && node.children[0].attribs['height']
+          ? node.children[0].attribs['height']
+          : null;
+      if (nodeWidth && nodeHeight)
+        return (
+          <figure
+            className={node.attribs['class']}
+            style={{ width: `${nodeWidth}px`, height: `${nodeHeight}px` }}
+          >
+            {children}
+          </figure>
+        );
+      return <figure className={node.attribs['class']}>{children}</figure>;
+    }
+  },
   // Replace image tags with Gatsby image
   {
     replaceChildren: false,
     shouldProcessNode: function (node) {
-      if (
-        node.attribs &&
-        node.attribs['class'] &&
-        node.attribs['class'].substring(0, 8) === 'wp-image'
-      )
-        console.log(node);
       return (
         node.attribs &&
         node.attribs['class'] &&
@@ -48,9 +73,28 @@ var processingInstructions = [
     processNode: function (node, children, index) {
       // e.g. wp-image-22
       const parsedImageID = node.attribs['class'].split('-')[2];
-      const imagePathFrag = node.attribs['src'].split('.');
-      const imageExtension = imagePathFrag[imagePathFrag.length - 1];
-      return <Image src={`${parsedImageID}.${imageExtension}`}></Image>;
+      //console.log(node);
+      if (
+        node.parent &&
+        node.parent.attribs['class'] &&
+        node.parent.attribs['class'].includes('is-resized')
+      ) {
+        return (
+          <Image
+            src={`${parsedImageID}`}
+            alt={node.attribs['alt'] ? node.attribs['alt'] : ''}
+            width={node.attribs['class'].width}
+            height={node.attribs['class'].height}
+          ></Image>
+        );
+      }
+
+      return (
+        <Image
+          src={`${parsedImageID}`}
+          alt={node.attribs['alt'] ? node.attribs['alt'] : ''}
+        ></Image>
+      );
     }
   },
   {
