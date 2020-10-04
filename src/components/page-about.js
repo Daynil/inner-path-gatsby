@@ -1,7 +1,7 @@
 import { Button, Card, CardActions, CardHeader } from '@material-ui/core';
 import { graphql, Link } from 'gatsby';
 import React from 'react';
-import { parseInternalLinks } from '../util/link-parser';
+import { parseWPHTMLString } from '../util/wp-parser';
 import Layout from './layout';
 
 export default function Page({ path, data }) {
@@ -50,7 +50,7 @@ export default function Page({ path, data }) {
             })}
         </div>
         <div className="entry-content">
-          {parseInternalLinks(data.wordpressPage.content)}
+          {parseWPHTMLString(data.wordpressPage.content)}
         </div>
         {/* <div
           className="entry-content"

@@ -1,3 +1,5 @@
+const path = require(`path`);
+
 module.exports = {
   siteMetadata: {
     siteUrl: 'https://www.innerpathllc.com',
@@ -7,6 +9,13 @@ module.exports = {
   },
   plugins: [
     `gatsby-plugin-react-helmet`,
+    {
+      resolve: `gatsby-source-filesystem`,
+      options: {
+        name: `images`,
+        path: path.join(__dirname, `src`, `images`, 'files')
+      }
+    },
     `gatsby-transformer-sharp`,
     `gatsby-plugin-sharp`
     // {

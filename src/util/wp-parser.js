@@ -1,5 +1,6 @@
 import { Link } from 'gatsby';
 import React from 'react';
+import Image from '../components/image';
 var HtmlToReact = require('html-to-react');
 var HtmlToReactParser = require('html-to-react').Parser;
 
@@ -13,8 +14,8 @@ var htmlToReactParser = new HtmlToReactParser();
 let processNodeDefinitions = new HtmlToReact.ProcessNodeDefinitions(React);
 
 // Traverse the wordpress HTML content string
-// Replace any internal anchor links with Gatsby
 var processingInstructions = [
+  // Replace any internal anchor links with Gatsby
   {
     replaceChildren: false,
     shouldProcessNode: function (node) {
@@ -28,6 +29,30 @@ var processingInstructions = [
       return <Link to={node.attribs['href']}>{node.children[0].data}</Link>;
     }
   },
+  // Replace image tags with Gatsby image
+  {
+    replaceChildren: false,
+    shouldProcessNode: function (node) {
+      if (
+        node.attribs &&
+        node.attribs['class'] &&
+        node.attribs['class'].substring(0, 8) === 'wp-image'
+      )
+        console.log(node);
+      return (
+        node.attribs &&
+        node.attribs['class'] &&
+        node.attribs['class'].substring(0, 8) === 'wp-image'
+      );
+    },
+    processNode: function (node, children, index) {
+      // e.g. wp-image-22
+      const parsedImageID = node.attribs['class'].split('-')[2];
+      const imagePathFrag = node.attribs['src'].split('.');
+      const imageExtension = imagePathFrag[imagePathFrag.length - 1];
+      return <Image src={`${parsedImageID}.${imageExtension}`}></Image>;
+    }
+  },
   {
     // Anything else
     shouldProcessNode: function (node) {
@@ -37,7 +62,7 @@ var processingInstructions = [
   }
 ];
 
-export function parseInternalLinks(htmlString) {
+export function parseWPHTMLString(htmlString) {
   return htmlToReactParser.parseWithInstructions(
     htmlString,
     isValidNode,
