@@ -1,4 +1,11 @@
 const fetch = require('node-fetch');
+const util = require('util');
+const fs = require('fs');
+// @ts-ignore
+const streamPipeline = util.promisify(require('stream').pipeline);
+// @ts-ignore
+const path = require('path');
+const wpAPIBasePath = 'http://admin.innerpathllc.com/wp-json/wp/v2';
 
 /** @type { import("gatsby").GatsbyNode["sourceNodes"] } */
 exports.sourceNodes = async ({
@@ -8,13 +15,11 @@ exports.sourceNodes = async ({
 }) => {
   const { createNode } = actions;
 
-  const pages = await (
-    await fetch('http://admin.innerpathllc.com/wp-json/wp/v2/pages')
-  ).json();
+  // @ts-ignore
+  const pages = await (await fetch(`${wpAPIBasePath}/pages`)).json();
 
-  const subLeasersData = await (
-    await fetch('http://admin.innerpathllc.com/wp-json/wp/v2/subleaser')
-  ).json();
+  const subLeasersData = await // @ts-ignore
+  (await fetch(`${wpAPIBasePath}/subleaser`)).json();
 
   const subLeasers = subLeasersData
     .filter((subLeaser) => subLeaser.status === 'publish')
@@ -56,9 +61,8 @@ exports.sourceNodes = async ({
     }
   });
 
-  const menu = await (
-    await fetch('http://admin.innerpathllc.com/wp-json/wp/v2/menu')
-  ).json();
+  // @ts-ignore
+  const menu = await (await fetch(`${wpAPIBasePath}/menu`)).json();
 
   menu.forEach((menuItem) => {
     const itemUrlParts = menuItem.url.split('/');
@@ -108,6 +112,49 @@ exports.sourceNodes = async ({
     createNode(Object.assign({}, pageNodeData, pageNodeMetaData));
   });
 
+  // @ts-ignore
+  const images = (await (await fetch(`${wpAPIBasePath}/media`)).json()).map(
+    (image) => {
+      return {
+        wpID: image.id,
+        name: image.slug,
+        uploaded: image.date,
+        url: image.media_details.sizes.full.source_url
+      };
+    }
+  );
+
+  // @ts-ignore
+  const imageCache = JSON.parse(
+    // @ts-ignore
+    fs.readFileSync(require.resolve('./src/images/cache.json'))
+  );
+  let imagesDownloaded = false;
+  for await (const image of images) {
+    const cachedImage = imageCache.find(
+      (cached) =>
+        cached.wpID === image.wpID && cached.uploaded === image.uploaded
+    );
+    if (!cachedImage) {
+      console.log(
+        `Downloading wp image name: ${image.name}, id: ${image.wpID}`
+      );
+      const imagePathFrag = image.url.split('.');
+      const imageExtension = imagePathFrag[imagePathFrag.length - 1];
+
+      await downloadRemoteImage(
+        image.url,
+        `./src/images/files/${image.wpID}.${imageExtension}`
+      );
+
+      imageCache.push(image);
+      imagesDownloaded = true;
+    }
+  }
+  if (imagesDownloaded) {
+    fs.writeFileSync('./src/images/cache.json', JSON.stringify(imageCache));
+  }
+
   return;
 };
 
@@ -150,3 +197,12 @@ exports.onCreateWebpackConfig = ({ actions }) => {
     });
   }
 };
+
+async function downloadRemoteImage(imagePath, destination) {
+  const res = await fetch(imagePath);
+  if (res.ok) {
+    // @ts-ignore
+    return streamPipeline(res.body, fs.createWriteStream(destination));
+  }
+  throw new Error(`Image download error ${res.statusText}`);
+}

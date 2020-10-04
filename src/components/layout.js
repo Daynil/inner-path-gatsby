@@ -15,6 +15,7 @@ import { deepPurple, teal } from '@material-ui/core/colors';
 import { graphql, Link, useStaticQuery } from 'gatsby';
 import React from 'react';
 import EmailIcon from '../assets/email-icon';
+// @ts-ignore
 import logo from '../assets/innerpathlogos.svg';
 import MenuIcon from '../assets/menu-icon';
 import PhoneIcon from '../assets/phone-icon';
