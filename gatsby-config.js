@@ -4,7 +4,7 @@ module.exports = {
   siteMetadata: {
     siteUrl: 'https://www.innerpathllc.com',
     title: `Inner Path LLC`,
-    description: `Inner Path wbsite`,
+    description: `Inner Path website`,
     author: `Danny Libin`
   },
   plugins: [

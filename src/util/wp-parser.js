@@ -73,27 +73,11 @@ var processingInstructions = [
     processNode: function (node, children, index) {
       // e.g. wp-image-22
       const parsedImageID = node.attribs['class'].split('-')[2];
-      //console.log(node);
-      if (
-        node.parent &&
-        node.parent.attribs['class'] &&
-        node.parent.attribs['class'].includes('is-resized')
-      ) {
-        return (
-          <Image
-            src={`${parsedImageID}`}
-            alt={node.attribs['alt'] ? node.attribs['alt'] : ''}
-            width={node.attribs['class'].width}
-            height={node.attribs['class'].height}
-          ></Image>
-        );
-      }
-
       return (
         <Image
           src={`${parsedImageID}`}
           alt={node.attribs['alt'] ? node.attribs['alt'] : ''}
-        ></Image>
+        />
       );
     }
   },

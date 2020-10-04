@@ -6,6 +6,7 @@ import {
   makeStyles,
   Menu,
   MenuItem,
+  Snackbar,
   TextField,
   ThemeProvider,
   Toolbar,
@@ -13,12 +14,13 @@ import {
 } from '@material-ui/core';
 import { deepPurple, teal } from '@material-ui/core/colors';
 import { graphql, Link, useStaticQuery } from 'gatsby';
-import React from 'react';
+import React, { useRef } from 'react';
 import EmailIcon from '../assets/email-icon';
 // @ts-ignore
 import logo from '../assets/innerpathlogos.svg';
 import MenuIcon from '../assets/menu-icon';
 import PhoneIcon from '../assets/phone-icon';
+import { sendMail } from '../util/contact';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -94,6 +96,35 @@ const Layout = ({ path, children }) => {
 
   const toggleDrawer = () => {
     setDrawerOpen(!drawerOpen);
+  };
+
+  const [snackOpen, setSnackOpen] = React.useState(false);
+  const [snackMsg, setSnackMsg] = React.useState('');
+
+  const nameFirstRef = useRef(null);
+  const nameLastRef = useRef(null);
+  const emailRef = useRef(null);
+  const commentRef = useRef(null);
+
+  const handleEmailSubmit = () => {
+    // Hacky access of material-ui input values for speed
+    const mailData = {
+      first: nameFirstRef.current.children[1].firstElementChild.value,
+      last: nameLastRef.current.children[1].firstElementChild.value,
+      email: emailRef.current.children[1].firstElementChild.value,
+      body: commentRef.current.children[1].firstElementChild.value,
+      subject: ''
+    };
+    console.log(mailData);
+    sendMail(mailData)
+      .then((res) => {
+        setSnackMsg('Email sent, thanks for contacting us!');
+        setSnackOpen(true);
+      })
+      .catch((e) => {
+        setSnackMsg('Email error, please try again later.');
+        setSnackOpen(true);
+      });
   };
 
   const menuItems = menuData.allWordpressMenuItem.edges.map(
@@ -235,6 +266,12 @@ const Layout = ({ path, children }) => {
           </AppBar>
         </div>
         <main>{children}</main>
+        <Snackbar
+          open={snackOpen}
+          autoHideDuration={4000}
+          onClose={() => setSnackOpen(false)}
+          message={snackMsg}
+        />
         <footer>
           <h4 id="contact-text">Want to contact us?</h4>
 
@@ -264,6 +301,7 @@ const Layout = ({ path, children }) => {
                   type="text"
                   id="nameFirst"
                   label="First Name"
+                  ref={nameFirstRef}
                   InputProps={{
                     style: {
                       caretColor: `${theme.palette.primary.main}`,
@@ -277,6 +315,7 @@ const Layout = ({ path, children }) => {
                   type="text"
                   id="nameLast"
                   label="Last Name"
+                  ref={nameLastRef}
                   InputProps={{
                     style: {
                       caretColor: `${theme.palette.primary.main}`,
@@ -293,6 +332,7 @@ const Layout = ({ path, children }) => {
                 className="form-control"
                 id="email"
                 label="Email"
+                ref={emailRef}
                 InputProps={{
                   style: {
                     caretColor: `${theme.palette.primary.main}`,
@@ -310,6 +350,7 @@ const Layout = ({ path, children }) => {
                 id="comment"
                 rows="4"
                 label="Comment"
+                ref={commentRef}
                 InputProps={{
                   style: {
                     caretColor: `${theme.palette.primary.main}`,
@@ -318,7 +359,12 @@ const Layout = ({ path, children }) => {
                 }}
               />
 
-              <Button variant="outlined" color="primary" id="contact-submit">
+              <Button
+                variant="outlined"
+                color="primary"
+                id="contact-submit"
+                onClick={handleEmailSubmit}
+              >
                 Submit
               </Button>
             </form>
