@@ -84,14 +84,23 @@ const Layout = ({ path, children }) => {
       }
     }
   `);
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
+
+  const [anchorEls, setAnchorEls] = React.useState([]);
+  const handleClick = (event, wpID) => {
+    setAnchorEls(
+      anchorEls.map((anchorEl) => {
+        if (anchorEl.id === wpID)
+          return { ...anchorEl, el: event.currentTarget };
+        else return anchorEl;
+      })
+    );
   };
 
   const handleClose = () => {
-    setAnchorEl(null);
+    setAnchorEls(anchorEls.map((anchorEl) => ({ ...anchorEl, el: null })));
   };
+
+  console.log(anchorEls);
 
   const [drawerOpen, setDrawerOpen] = React.useState(false);
 
@@ -162,32 +171,39 @@ const Layout = ({ path, children }) => {
     (edge) => edge.node
   );
 
+  const anchors = [];
   const parentItems = menuItems
     .filter((item) => item.parentWpID === 0)
     .map((parent) => {
       parent.children = menuItems.filter(
         (child) => child.parentWpID === parent.wpID
       );
+      if (parent.children.length) {
+        anchors.push({ id: parent.wpID, el: null });
+      }
       return parent;
     });
+
+  React.useEffect(() => setAnchorEls(anchors), []);
 
   const parentMenu = parentItems.map((item, i) => {
     let submenu = null;
     const linkColor = drawerOpen ? 'black' : 'white';
     if (item.children.length) {
+      const anchor = anchorEls.find((el) => el.id === item.wpID);
       submenu = (
         <Menu
           id={`${item.wpID}-menu`}
-          key={i}
-          anchorEl={anchorEl}
+          key={item.wpID}
+          anchorEl={anchor ? anchor.el : null}
           keepMounted
-          open={Boolean(anchorEl)}
+          open={Boolean(anchor ? anchor.el : null)}
           onClose={handleClose}
         >
           {item.children.map((child, i) => (
             <MenuItem
-              id={i}
-              key={i}
+              id={child.targetSlug}
+              key={child.targetSlug}
               onClick={handleClose}
               style={{ margin: 0, padding: 0 }}
             >
@@ -217,7 +233,9 @@ const Layout = ({ path, children }) => {
             margin: '0 10px 0 0',
             padding: 0
           }}
-          onClick={item.children.length ? handleClick : null}
+          onClick={
+            item.children.length ? (e) => handleClick(e, item.wpID) : null
+          }
         >
           {item.children.length ? (
             <span
