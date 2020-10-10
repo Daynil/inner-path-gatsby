@@ -211,6 +211,9 @@ exports.createPages = async ({ graphql, actions }) => {
       case 'forms':
         component = require.resolve('./src/components/page-forms.js');
         break;
+      case 'contact':
+        component = require.resolve('./src/components/page-contact.js');
+        break;
       default:
         component = require.resolve('./src/components/page.js');
         break;

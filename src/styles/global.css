@@ -80,6 +80,13 @@ img {
   max-width: 100%;
 }
 
+.map {
+  display: block;
+  margin: 0 auto;
+  width: 50vw;
+  height: calc(40vw * 0.5);
+}
+
 a {
   color: hsl(174deg 100% 38%);
   text-decoration: none;

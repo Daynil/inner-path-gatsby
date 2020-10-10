@@ -77,7 +77,54 @@ var processingInstructions = [
         <Image
           src={`${parsedImageID}`}
           alt={node.attribs['alt'] ? node.attribs['alt'] : ''}
+          key={parsedImageID}
         />
+      );
+    }
+  },
+  // Custom template tag map
+  {
+    replaceChildren: false,
+    shouldProcessNode: function (node) {
+      return (
+        node.children &&
+        node.children[0] &&
+        node.children[0].type === 'text' &&
+        node.children[0].data === '{{map}}'
+      );
+    },
+    processNode: function (node, children, index) {
+      return (
+        <iframe
+          className="map"
+          frameBorder="0"
+          style={{ border: '0' }}
+          src="https://www.google.com/maps/embed/v1/place?key=AIzaSyCWcXzaBIDCFf1WHLLwUhhytG0PLiSWV9Y&q=Inner+Path,+Westmont,+IL+60559"
+          allowFullScreen
+        ></iframe>
+      );
+    }
+  },
+  // Custom template tag contact form
+  {
+    replaceChildren: false,
+    shouldProcessNode: function (node) {
+      return (
+        node.children &&
+        node.children[0] &&
+        node.children[0].type === 'text' &&
+        node.children[0].data === '{{contactForm}}'
+      );
+    },
+    processNode: function (node, children, index) {
+      return (
+        <iframe
+          className="map"
+          frameBorder="0"
+          style={{ border: '0' }}
+          src="https://www.google.com/maps/embed/v1/place?key=AIzaSyCWcXzaBIDCFf1WHLLwUhhytG0PLiSWV9Y&q=Inner+Path,+Westmont,+IL+60559"
+          allowFullScreen
+        ></iframe>
       );
     }
   },
