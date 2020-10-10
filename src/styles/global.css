@@ -9,13 +9,13 @@ html body {
   font-family: 'Work Sans', sans-serif;
 }
 
-@media only screen and (min-width: 850px) {
+@media only screen and (min-width: 950px) {
   .hide-button {
     display: none !important;
   }
 }
 
-@media only screen and (max-width: 850px) {
+@media only screen and (max-width: 950px) {
   .hide-main-menu {
     display: none !important;
   }
@@ -26,7 +26,7 @@ html body {
   flex-direction: column-reverse;
 }
 
-@media only screen and (min-width: 850px) {
+@media only screen and (min-width: 950px) {
   .about-layout {
     display: flex;
     flex-direction: row;
