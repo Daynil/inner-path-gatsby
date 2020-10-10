@@ -95,6 +95,10 @@ a:visited:hover {
   color: hsl(174deg 100% 47%);
 }
 
+.form:hover {
+  cursor: pointer;
+}
+
 img.rounded {
   border-radius: 20px;
 }

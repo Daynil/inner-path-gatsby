@@ -21,7 +21,7 @@ import EmailIcon from '../assets/email-icon';
 import logo from '../assets/innerpathlogos.svg';
 import MenuIcon from '../assets/menu-icon';
 import PhoneIcon from '../assets/phone-icon';
-import { sendMail } from '../util/contact';
+import { sendMail } from '../util/util';
 
 const useStyles = makeStyles((theme) => ({
   root: {
