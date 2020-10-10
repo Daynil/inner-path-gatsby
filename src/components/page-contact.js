@@ -1,6 +1,7 @@
 import {
   Button,
   CircularProgress,
+  InputLabel,
   MenuItem,
   Select,
   Snackbar,
@@ -25,7 +26,6 @@ export default function Contact({ path, data }) {
   const nameLastRef = useRef(null);
   const emailRef = useRef(null);
   const commentRef = useRef(null);
-  const subjectRef = useRef(null);
 
   const handleEmailSubmit = () => {
     // Prevent repetitive submissions
@@ -37,11 +37,8 @@ export default function Contact({ path, data }) {
       last: nameLastRef.current.children[1].firstElementChild.value,
       email: emailRef.current.children[1].firstElementChild.value,
       body: commentRef.current.children[1].firstElementChild.value,
-      subject: subjectRef.current.children[1].firstElementChild.value
+      subject
     };
-
-    console.log(mailData);
-    return;
 
     let emailReg = /(?:[a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/g;
 
@@ -49,7 +46,8 @@ export default function Contact({ path, data }) {
       mailData.first === '' ||
       mailData.last === '' ||
       mailData.email === '' ||
-      mailData.body === ''
+      mailData.body === '' ||
+      mailData.subject === ''
     ) {
       setSnackMsg('Please fill out all fields');
       setSnackOpen(true);
@@ -120,23 +118,30 @@ export default function Contact({ path, data }) {
                   ref={emailRef}
                   style={{ width: '45%' }}
                 />
-                <Select
-                  label="subject"
-                  ref={subjectRef}
-                  value={subject}
-                  onChange={(e) => setSubject(e.target.value)}
-                  style={{ width: '45%' }}
+                <div
+                  style={{ width: '45%', position: 'relative', top: '10px' }}
                 >
-                  <MenuItem value="Question/Information">
-                    Question/Information
-                  </MenuItem>
-                  <MenuItem value="Request Appointment">
-                    Request Appointment
-                  </MenuItem>
-                  <MenuItem value="Free First Consultation">
-                    Free First Consultation
-                  </MenuItem>
-                </Select>
+                  <InputLabel htmlFor="email-subject">Subject</InputLabel>
+                  <Select
+                    required
+                    label="subject"
+                    value={subject}
+                    onChange={(e) => setSubject(e.target.value)}
+                    name="subject"
+                    id="email-subject"
+                    style={{ width: '100%' }}
+                  >
+                    <MenuItem value="Question/Information">
+                      Question/Information
+                    </MenuItem>
+                    <MenuItem value="Request Appointment">
+                      Request Appointment
+                    </MenuItem>
+                    <MenuItem value="Free First Consultation">
+                      Free First Consultation
+                    </MenuItem>
+                  </Select>
+                </div>
               </div>
 
               <TextField
