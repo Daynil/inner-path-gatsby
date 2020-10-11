@@ -176,7 +176,8 @@ exports.sourceNodes = async ({
     for await (const pdf of pdfs) {
       // For dev purposes, avoid redownloading every launch
       if (!fs.existsSync(`./static/forms/${pdf.slug}.pdf`)) {
-        if (!fs.existsSync('./static/forms')) fs.mkdirSync('./static/forms');
+        if (!fs.existsSync('./static/forms'))
+          fs.mkdirSync('./static/forms', { recursive: true });
         console.log(`Downloading wp pdf name: ${pdf.slug}`);
         await downloadRemoteFile(pdf.url, `./static/forms/${pdf.slug}.pdf`);
       }
