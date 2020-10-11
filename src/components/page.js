@@ -2,10 +2,12 @@ import { graphql } from 'gatsby';
 import React from 'react';
 import { parseWPHTMLString } from '../util/wp-parser';
 import Layout from './layout';
+import SEO from './seo';
 
 export default function Page({ path, data }) {
   return (
     <Layout path={path}>
+      <SEO title={data.wordpressPage.title} />
       <div style={{ minHeight: 'calc(100vh - 64px - 530px)' }}>
         {data.wordpressPage.title === 'Home' ? (
           <div style={{ marginBottom: '10px' }}></div>
