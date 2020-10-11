@@ -1,9 +1,9 @@
 {
-  "name": "gatsby-starter-default",
+  "name": "inner-path-gatsby",
   "private": true,
-  "description": "A simple starter to get up and developing quickly with Gatsby",
-  "version": "0.1.0",
-  "author": "Kyle Mathews <mathews.kyle@gmail.com>",
+  "description": "Website for Inner Path",
+  "version": "1.0",
+  "author": "Danny Libin <dlibinrx@gmail.com>",
   "dependencies": {
     "@material-ui/core": "^4.11.0",
     "@types/node-fetch": "^2.5.7",
@@ -40,12 +40,5 @@
     "serve": "gatsby serve",
     "clean": "gatsby clean",
     "test": "echo \"Write tests! -> https://gatsby.dev/unit-testing\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/gatsbyjs/gatsby-starter-default"
-  },
-  "bugs": {
-    "url": "https://github.com/gatsbyjs/gatsby/issues"
   }
 }
