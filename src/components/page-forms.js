@@ -10,7 +10,7 @@ export default function Form({ path, data }) {
 
   React.useEffect(() => {
     const fetchPdfs = async () => {
-      const pdfMeta = await (await fetch('/pdfMeta.json')).json();
+      const pdfMeta = await (await fetch('/forms/pdfMeta.json')).json();
       setForms(pdfMeta);
     };
     fetchPdfs();
