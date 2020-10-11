@@ -100,8 +100,6 @@ const Layout = ({ path, children }) => {
     setAnchorEls(anchorEls.map((anchorEl) => ({ ...anchorEl, el: null })));
   };
 
-  console.log(anchorEls);
-
   const [drawerOpen, setDrawerOpen] = React.useState(false);
 
   const toggleDrawer = () => {
