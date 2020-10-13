@@ -68,6 +68,7 @@ exports.sourceNodes = async ({
       wpID: menuItem.ID,
       name: menuItem.title,
       parentWpID: parseInt(menuItem.menu_item_parent),
+      sortOrder: menuItem.menu_order,
       targetSlug:
         menuItem.url[menuItem.url.length - 1] === '/'
           ? itemUrlParts[itemUrlParts.length - 2]

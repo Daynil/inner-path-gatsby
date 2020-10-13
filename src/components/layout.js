@@ -78,6 +78,7 @@ const Layout = ({ path, children }) => {
             name
             parentWpID
             targetSlug
+            sortOrder
             wpID
           }
         }
@@ -184,82 +185,86 @@ const Layout = ({ path, children }) => {
 
   React.useEffect(() => setAnchorEls(anchors), []);
 
-  const parentMenu = parentItems.map((item, i) => {
-    let submenu = null;
-    const linkColor = drawerOpen ? 'black' : 'white';
-    if (item.children.length) {
-      const anchor = anchorEls.find((el) => el.id === item.wpID);
-      submenu = (
-        <Menu
-          id={`${item.wpID}-menu`}
-          key={item.wpID}
-          anchorEl={anchor ? anchor.el : null}
-          keepMounted
-          open={Boolean(anchor ? anchor.el : null)}
-          onClose={handleClose}
-        >
-          {item.children.map((child, i) => (
-            <MenuItem
-              id={child.targetSlug}
-              key={child.targetSlug}
-              onClick={handleClose}
-              style={{ margin: 0, padding: 0 }}
-            >
+  const parentMenu = parentItems
+    .sort((a, b) => a.sortOrder - b.sortOrder)
+    .map((item, i) => {
+      let submenu = null;
+      const linkColor = drawerOpen ? 'black' : 'white';
+      if (item.children.length) {
+        const anchor = anchorEls.find((el) => el.id === item.wpID);
+        submenu = (
+          <Menu
+            id={`${item.wpID}-menu`}
+            key={item.wpID}
+            anchorEl={anchor ? anchor.el : null}
+            keepMounted
+            open={Boolean(anchor ? anchor.el : null)}
+            onClose={handleClose}
+          >
+            {item.children
+              .sort((a, b) => a.sortOrder - b.sortOrder)
+              .map((child, i) => (
+                <MenuItem
+                  id={child.targetSlug}
+                  key={child.targetSlug}
+                  onClick={handleClose}
+                  style={{ margin: 0, padding: 0 }}
+                >
+                  <Link
+                    to={'../' + child.targetSlug}
+                    style={{
+                      color: 'black',
+                      padding: '10px',
+                      width: '100%'
+                    }}
+                  >
+                    <span style={{ fontWeight: 400, fontSize: '16px' }}>
+                      {child.name}
+                    </span>
+                  </Link>
+                </MenuItem>
+              ))}
+          </Menu>
+        );
+      }
+      return (
+        <div key={i}>
+          <Button
+            color="inherit"
+            style={{
+              textTransform: 'none',
+              margin: '0 10px 0 0',
+              padding: 0
+            }}
+            onClick={
+              item.children.length ? (e) => handleClick(e, item.wpID) : null
+            }
+          >
+            {item.children.length ? (
+              <span
+                style={{ fontWeight: 400, fontSize: '16px', padding: '10px' }}
+              >
+                {item.name}
+              </span>
+            ) : (
               <Link
-                to={'../' + child.targetSlug}
+                to={'../' + item.targetSlug}
                 style={{
-                  color: 'black',
+                  color: linkColor,
                   padding: '10px',
                   width: '100%'
                 }}
               >
                 <span style={{ fontWeight: 400, fontSize: '16px' }}>
-                  {child.name}
+                  {item.name}
                 </span>
               </Link>
-            </MenuItem>
-          ))}
-        </Menu>
+            )}
+          </Button>
+          {submenu}
+        </div>
       );
-    }
-    return (
-      <div key={i}>
-        <Button
-          color="inherit"
-          style={{
-            textTransform: 'none',
-            margin: '0 10px 0 0',
-            padding: 0
-          }}
-          onClick={
-            item.children.length ? (e) => handleClick(e, item.wpID) : null
-          }
-        >
-          {item.children.length ? (
-            <span
-              style={{ fontWeight: 400, fontSize: '16px', padding: '10px' }}
-            >
-              {item.name}
-            </span>
-          ) : (
-            <Link
-              to={'../' + item.targetSlug}
-              style={{
-                color: linkColor,
-                padding: '10px',
-                width: '100%'
-              }}
-            >
-              <span style={{ fontWeight: 400, fontSize: '16px' }}>
-                {item.name}
-              </span>
-            </Link>
-          )}
-        </Button>
-        {submenu}
-      </div>
-    );
-  });
+    });
 
   return (
     <ThemeProvider theme={theme}>
