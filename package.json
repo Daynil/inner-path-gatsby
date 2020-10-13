@@ -2,7 +2,7 @@
   "name": "inner-path-gatsby",
   "private": true,
   "description": "Website for Inner Path",
-  "version": "1.0",
+  "version": "1.0.0",
   "author": "Danny Libin <dlibinrx@gmail.com>",
   "dependencies": {
     "@material-ui/core": "^4.11.0",

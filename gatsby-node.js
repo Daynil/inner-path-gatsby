@@ -1,4 +1,4 @@
-const fetch = require('node-fetch');
+const fetch = require('node-fetch').default;
 const util = require('util');
 const fs = require('fs');
 // @ts-ignore
@@ -15,11 +15,9 @@ exports.sourceNodes = async ({
 }) => {
   const { createNode } = actions;
 
-  // @ts-ignore
-  const pages = await (await fetch(`${wpAPIBasePath}/pages`)).json();
+  const pages = await wpGetAll('pages');
 
-  const subLeasersData = await // @ts-ignore
-  (await fetch(`${wpAPIBasePath}/subleaser`)).json();
+  const subLeasersData = await wpGetAll('subleaser');
 
   const subLeasers = subLeasersData
     .filter((subLeaser) => subLeaser.status === 'publish')
@@ -61,8 +59,7 @@ exports.sourceNodes = async ({
     }
   });
 
-  // @ts-ignore
-  const menu = await (await fetch(`${wpAPIBasePath}/menu`)).json();
+  const menu = await wpGetAll('menu');
 
   menu.forEach((menuItem) => {
     const itemUrlParts = menuItem.url.split('/');
@@ -112,9 +109,8 @@ exports.sourceNodes = async ({
     createNode(Object.assign({}, pageNodeData, pageNodeMetaData));
   });
 
-  const media = await (await fetch(`${wpAPIBasePath}/media`)).json();
+  const media = await wpGetAll('media');
 
-  // @ts-ignore
   const images = media
     .filter((item) => item.media_type === 'image')
     .map((image) => {
@@ -126,7 +122,6 @@ exports.sourceNodes = async ({
       };
     });
 
-  // @ts-ignore
   const imageCache = JSON.parse(
     // @ts-ignore
     fs.readFileSync(require.resolve('./src/images/cache.json'))
@@ -157,7 +152,6 @@ exports.sourceNodes = async ({
     fs.writeFileSync('./src/images/cache.json', JSON.stringify(imageCache));
   }
 
-  // @ts-ignore
   const pdfs = media
     .filter((item) => item.mime_type === 'application/pdf')
     .map((pdf) => {
@@ -247,4 +241,21 @@ async function downloadRemoteFile(filePath, destination) {
     return streamPipeline(res.body, fs.createWriteStream(destination));
   }
   throw new Error(`File download error ${res.statusText}`);
+}
+
+async function wpGetAll(url, queryParams) {
+  let wpRes = [];
+  let curResLength = 0;
+  let curPage = 1;
+
+  // If we get 100 results, loop until it's less so we get everything
+  do {
+    const wpResPage = await (
+      await fetch(`${wpAPIBasePath}/${url}?per_page=100&page=${curPage}`)
+    ).json();
+    wpRes = wpRes.concat(wpResPage);
+    curResLength = wpResPage.length;
+    curPage++;
+  } while (curResLength === 100);
+  return wpRes;
 }
