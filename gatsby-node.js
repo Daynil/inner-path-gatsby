@@ -75,6 +75,7 @@ exports.sourceNodes = async ({
           : itemUrlParts[itemUrlParts.length - 1]
     };
     if (nodeData.name === 'Home') nodeData.targetSlug = '/';
+    if (nodeData.name.includes('Blog')) nodeData.targetSlug = menuItem.url;
 
     const nodeMetaData = {
       id: createNodeId(`id-${nodeData.wpID}`),

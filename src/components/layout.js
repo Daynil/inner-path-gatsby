@@ -210,18 +210,34 @@ const Layout = ({ path, children }) => {
                   onClick={handleClose}
                   style={{ margin: 0, padding: 0 }}
                 >
-                  <Link
-                    to={'../' + child.targetSlug}
-                    style={{
-                      color: 'black',
-                      padding: '10px',
-                      width: '100%'
-                    }}
-                  >
-                    <span style={{ fontWeight: 400, fontSize: '16px' }}>
+                  {child.targetSlug.substring(0, 4) !== 'http' ? (
+                    <Link
+                      to={'../' + child.targetSlug}
+                      style={{
+                        color: 'black',
+                        padding: '10px',
+                        width: '100%'
+                      }}
+                    >
+                      <span style={{ fontWeight: 400, fontSize: '16px' }}>
+                        {child.name}
+                      </span>
+                    </Link>
+                  ) : (
+                    <a
+                      href={child.targetSlug}
+                      target="_blank"
+                      style={{
+                        color: 'black',
+                        padding: '10px',
+                        width: '100%',
+                        fontWeight: 400,
+                        fontSize: '16px'
+                      }}
+                    >
                       {child.name}
-                    </span>
-                  </Link>
+                    </a>
+                  )}
                 </MenuItem>
               ))}
           </Menu>
